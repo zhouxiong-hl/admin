@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fangchuang.haolinbao.mapper.CabinetMapper">
+
+    <resultMap id="cabinetMap" type="com.fangchuang.haolinbao.entity.CabinetEntity">
+        <result column="cabinet_id" property="cabinetId" />
+        <result column="cabinet_idnumber" property="cabinetIdnumber" />
+        <result column="cabinet_type" property="cabinetType" />
+        <result column="cabinet_drawer" property="cabinetDrawer" />
+        <result column="cabinet_drawersize" property="cabinetDrawersize" />
+        <result column="cabinet_price" property="cabinetPrice" />
+        <result column="cabinet_state" property="cabinetState" />
+    </resultMap>
+    <!--20200806 zhao
+    根据柜子格口大小查询格口-->
+    <select id="selectCabinetByType" resultMap="cabinetMap" parameterType="java.util.Map">
+     select cabinet_drawer,cabinet_idnumber,cabinet_drawersize,cabinet_type from cabinet where cabinet_drawersize=#{cabinetDrawersize} and
+        cabinet_idnumber=#{cabinetIdnumber} and cabinet_state=0 LIMIT 0,1
+
+    </select>
+    <!--20200808 zhao
+    全查快递柜编码-->
+    <select id="selectAll" resultMap="cabinetMap">
+      select cabinet_idnumber from cabinet GROUP BY cabinet_idnumber
+    </select>
+
+</mapper>

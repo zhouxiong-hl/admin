@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fangchuang.haolinbao.mapper.CourierMapper">
+
+<!-->入参parameterType=""    resultType 反参<!-->
+    <resultMap id="courierLoginMap" type="com.fangchuang.haolinbao.entity.CourierEntity">
+        <result column="courier_id" property="courierId" />
+        <result column="courier_name" property="courierName" />
+        <result column="courier_gender" property="courierGender" />
+        <result column="courier_address" property="courierAddress" />
+        <result column="courier_phone" property="courierPhone" />
+        <result column="courier_password" property="courierPassword" />
+        <result column="courier_brith" property="courierBirth" />
+        <result column="courier_idnumber" property="courierIdnumber" />
+        <result column="courier_available" property="courierAvailable" />
+        <result column="courier_company" property="courierCompany" />
+        <result column="courier_express" property="courierExpress" />
+        <result column="courier_icon" property="courierIcon" />
+        <result column="courier_money" property="courierMoney" />
+        <result column="courier_echarge" property="courierEcharge" />
+        <result column="courier_withdrawal" property="courierWithdrawal" />
+        <result column="courier_consumption" property="courierConsumption" />
+        <result column="courier_code" property="courierCode" />
+
+    </resultMap>
+
+    <!--20200805 zhao
+    快递员终端登录-->
+    <select id="courierLogin" resultMap="courierLoginMap" parameterType="java.util.Map">
+        select courier_name,courier_company,courier_phone from courier where  courier_phone=#{courierPhone} and courier_password=#{courierPassword}
+    </select>
+   <!--
+    20200805 zhao
+    快递员终端扫描快递单号-->
+    <update id="saomiaoExpress" parameterType="String">
+        update courier set courier_express=#{expressidnumber}
+    </update>
+    <!--20200811 zhao
+    快递员注册-->
+    <insert id="insertCourier" parameterType="java.util.Map">
+         insert into  courier (courier_id,courier_phone,courier_password,courier_code) values (#{courierId},#{courierPhone},#{courierPassword},#{courierCode})
+    </insert>
+    <insert id="" parameterType="java.util.Map">
+        insert into courier
+        (courier_id,courier_name,courier_gender,courier_address,courier_phone,courier_password,courier_brith,courier_idnumber,courier_company,courier_icon,courier_code)
+         values
+         (#{courierId},#{courierName},#{courierGender},#{courierAddress},#{courierPhone},#{courierPassword},#{courierBirth},#{courierIdnumber},#{courierCompany},#{courierIcon},#{courierCode})
+    </insert>
+    <!--20200811 zhao
+  将验证码存入数据库-->
+    <insert id="">
+        insert into courier (courier_id,courier_phone,courier_code) values (#{courierId},#{courierPhone},#{courierCode})
+    </insert>
+    <!--20200811 zhao
+   验证快递员code-->
+    <select id="yanzhenCourierCode" resultMap="courierLoginMap" parameterType="java.util.Map">
+         select courier_phone from courier where courier_code and courier_phone
+    </select>
+</mapper>

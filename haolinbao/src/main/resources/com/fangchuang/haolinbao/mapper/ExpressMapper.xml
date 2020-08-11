@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fangchuang.haolinbao.mapper.ExpressMapper">
+
+    <resultMap id="expressMap" type="com.fangchuang.haolinbao.entity.ExpressEntity">
+        <result column="express_id" property="expressId" />
+        <result column="express_idnumber" property="expressIdnumber" />
+        <result column="express_type" property="expressType" />
+        <result column="express_begintime" property="expressBegintime" />
+        <result column="express_endtime" property="expressEndtime" />
+        <result column="express_courier" property="expressCourier" />
+        <result column="express_cabinetposition" property="expressCabinetposition" />
+        <result column="express_cabinetnumber" property="expressCabinetnumber" />
+        <result column="express_sms" property="expressSms" />
+        <result column="express_state" property="expressState" />
+    </resultMap>
+
+    <!--20200806 zhao 扫描快递编号-->
+    <insert id="saomiaoExpress" parameterType="java.util.Map">
+         insert into express (express_id,express_idnumber,express_type,express_begintime,express_courier,express_cabinetposition,express_cabinetnumber)
+         values (#{expressId},#{expressidnumber},#{expresstype},#{expressbegintime},#{expresscourier},#{expresscabinetposition},#{expresscabinetnumber})
+    </insert>
+    <!--20200808 zhao  将短信验证码存入数据库-->
+    <update id="updateSMS" parameterType="java.util.Map">
+         update express set express_sms=#{express_sms},express_state='0' where express_idnumber=#{express_idnumber}
+    </update>
+   <!-- 20200808 zhao 用户通过取件码取件-->
+    <select id="SelectExpressSmsCode" resultMap="expressMap" parameterType="java.util.Map">
+        select express_idnumber,express_begintime from express where express_cabinetnumber=#{expressCabinetnumber} and express_sms=#{expressSms} and express_state='0'
+    </select>
+    <!-- 20200808 zhao 用户成功取件后修改endtime并5分钟后删除expresssms-->
+    <update id="updateExpress" parameterType="java.util.Map">
+        update express set express_endtime=#{expressEndtime},express_state='1' where express_cabinetnumber=#{expressCabinetnumber} and express_sms=#{expressSms}
+    </update>
+    <update id="deleteRxpress" parameterType="java.util.Map">
+        update  express  set express_state='2' where express_cabinetnumber=#{expressCabinetnumber} and express_sms=#{expressSms}
+    </update>
+
+
+
+</mapper>
